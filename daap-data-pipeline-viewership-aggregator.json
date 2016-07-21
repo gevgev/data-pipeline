@@ -54,8 +54,8 @@
     },
     {
       "myComment": "Ec-2 instance to run on",
-      "instanceType": "c4.2xlarge",
-      "imageId": "ami-35925e55",
+      "instanceType": "r3.2xlarge",
+      "imageId": "ami-20b97540",
       "name": "EC2ResourceObj",
       "id": "EC2ResourceObj",
       "type": "Ec2Resource",
@@ -77,21 +77,11 @@
       "description": "Shell command to run",
       "id": "myShellCmd",
       "type": "String"
-    },
-    {
-      "description": "CDW AWS key",
-      "id": "myCdwAwsKey",
-      "type": "String"
-    },
-    {
-      "description": "CDW AWS secret",
-      "id": "myCdwAwsSecret",
-      "type": "String"
     }
   ],
   "values": {
-    "myShellCmd": "cp ${INPUT1_STAGING_DIR}/* .\nchmod u+x ./loop.sh\nchmod u+x ./run.sh\nchmod u+x ./aws-s3-uploader\nchmod u+x ./cdwdatagetter\nchmod u+x ./precondition\n./loop.sh #{myCdwAwsKey} #{myCdwAwsSecret}",
-    "myS3InputLoc": "s3://daap-pipeline/hh-viewership/",
+    "myShellCmd": "cp ${INPUT1_STAGING_DIR}/* .\nchmod u+x ./loop.sh\nchmod u+x ./run.sh\nchmod u+x ./viewership-aggregator\nchmod u+x ./precondition\n./loop.sh",
+    "myS3InputLoc": "s3://daap-pipeline/viewership-aggregator/",
     "myS3OutputLoc": "s3://daap-pipeline/"
   }
 }
