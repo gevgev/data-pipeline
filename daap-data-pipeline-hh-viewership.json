@@ -1,0 +1,98 @@
+{
+  "objects": [
+    {
+      "myComment": "Pipeline root object",
+      "failureAndRerunMode": "CASCADE",
+      "schedule": {
+        "ref": "DefaultSchedule"
+      },
+      "resourceRole": "DataPipelineDefaultResourceRole",
+      "role": "DataPipelineDefaultRole",
+      "pipelineLogUri": "s3://daap-pipeline/",
+      "scheduleType": "cron",
+      "name": "Default",
+      "id": "Default"
+    },
+    {
+      "myComment": "This object is used to specify the time-based trigger for executing Activities and for provisioning Resources of the pipeline. In this case it is used by the 'Default' object so it will cascade down to all other objects in the pipeline if they do not override it. For this example, we are using it to specify that our pipeline will run immediately upon activation. Also, we are using the 'occurrences' option specify that the pipeline should only be run once. You can have multiple schedules defined in a pipeline.",
+      "type": "Schedule",
+      "id": "DefaultSchedule",
+      "occurrences": "1",
+      "period": "1 Day",
+      "startAt": "FIRST_ACTIVATION_DATE_TIME"
+    },
+    {
+      "myComment": "Input Stage S3 Location - binaries and scripts",
+      "directoryPath": "#{myS3InputLoc}",
+      "name": "S3InputLocation",
+      "id": "S3InputLocation",
+      "type": "S3DataNode"
+    },
+    {
+      "myComment": "Output S3 Location for Logs",
+      "directoryPath": "#{myS3OutputLoc}/#{format(@scheduledStartTime, 'YYYY-MM-dd-HH-mm-ss')}",
+      "name": "S3OutputLocation",
+      "id": "S3OutputLocation",
+      "type": "S3DataNode"
+    },
+    {
+      "myComment": "Shell Command Activity Obj",
+      "output": {
+        "ref": "S3OutputLocation"
+      },
+      "input": {
+        "ref": "S3InputLocation"
+      },
+      "stage": "true",
+      "name": "ShellCommandActivityObj",
+      "id": "ShellCommandActivityObj",
+      "runsOn": {
+        "ref": "EC2ResourceObj"
+      },
+      "type": "ShellCommandActivity",
+      "command": "#{myShellCmd}"
+    },
+    {
+      "myComment": "Ec-2 instance to run on",
+      "instanceType": "c4.2xlarge",
+      "imageId": "ami-7172b611",
+      "name": "EC2ResourceObj",
+      "id": "EC2ResourceObj",
+      "type": "Ec2Resource",
+      "terminateAfter": "1 Hour"
+    }
+  ],
+  "parameters": [
+    {
+      "description": "S3 output folder",
+      "id": "myS3OutputLoc",
+      "type": "AWS::S3::ObjectKey"
+    },
+    {
+      "description": "S3 input folder",
+      "id": "myS3InputLoc",
+      "type": "AWS::S3::ObjectKey"
+    },
+    {
+      "default": "grep -rc \"GET\" ${INPUT1_STAGING_DIR}/* > ${OUTPUT1_STAGING_DIR}/output.txt",
+      "description": "Shell command to run",
+      "id": "myShellCmd",
+      "type": "String"
+    },
+    {
+      "description": "CDW AWS key",
+      "id": "myCdwAwsKey",
+      "type": "String"
+    },
+    {
+      "description": "CDW AWS secret",
+      "id": "myCdwAwsSecret",
+      "type": "String"
+    }
+  ],
+  "values": {
+    "myShellCmd": "cp ${INPUT1_STAGING_DIR}/* .\nchmod u+x ./loop.sh\nchmod u+x ./run.sh\nchmod u+x ./aws-s3-uploader\nchmod u+x ./cdwdatagetter\nchmod u+x ./precondition\n./loop.sh #{myCdwAwsKey} #{myCdwAwsSecret}",
+    "myS3InputLoc": "s3://daap-pipeline/hh-viewership/",
+    "myS3OutputLoc": "s3://daap-pipeline/"
+  }
+}
