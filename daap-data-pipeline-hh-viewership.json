@@ -74,7 +74,6 @@
       "type": "AWS::S3::ObjectKey"
     },
     {
-      "default": "grep -rc \"GET\" ${INPUT1_STAGING_DIR}/* > ${OUTPUT1_STAGING_DIR}/output.txt",
       "description": "Shell command to run",
       "id": "myShellCmd",
       "type": "String"
