@@ -90,7 +90,7 @@
     }
   ],
   "values": {
-    "myShellCmd": "cp \${INPUT1_STAGING_DIR}/* .\nchmod u+x ./loop.sh\nchmod u+x ./run.sh\nchmod u+x ./aws-s3-uploader\nchmod u+x ./cdwdatagetter\nchmod u+x ./precondition\n./loop.sh #{myCdwAwsKey} #{myCdwAwsSecret}",
+    "myShellCmd": "cp ${INPUT1_STAGING_DIR}/* .\nchmod u+x ./loop.sh\nchmod u+x ./run.sh\nchmod u+x ./aws-s3-uploader\nchmod u+x ./cdwdatagetter\nchmod u+x ./precondition\n./loop.sh #{myCdwAwsKey} #{myCdwAwsSecret}",
     "myS3InputLoc": "s3://daap-pipeline/hh-viewership/",
     "myS3OutputLoc": "s3://daap-pipeline/"
   }
