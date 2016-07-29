@@ -58,7 +58,7 @@
       "name": "EC2ResourceObj",
       "id": "EC2ResourceObj",
       "type": "Ec2Resource",
-      "terminateAfter": "5 Hour"
+      "terminateAfter": "18 Hour"
     }
   ],
   "parameters": [
