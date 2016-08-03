@@ -1,7 +1,55 @@
 {
   "objects": [
     {
-      "myComment": "Pipeline root object",
+      "period": "1 Day",
+      "name": "DefaultSchedule",
+      "id": "DefaultSchedule",
+      "myComment": "This object is used to specify the time-based trigger for executing Activities and for provisioning Resources of the pipeline. In this case it is used by the 'Default' object so it will cascade down to all other objects in the pipeline if they do not override it. For this example, we are using it to specify that our pipeline will run immediately upon activation. Also, we are using the 'occurrences' option specify that the pipeline should only be run once. You can have multiple schedules defined in a pipeline.",
+      "type": "Schedule",
+      "startAt": "FIRST_ACTIVATION_DATE_TIME"
+    },
+    {
+      "role": "DataPipelineDefaultRole",
+      "subject": "FAILURE: Aggregated",
+      "name": "FailureNotify",
+      "id": "ActionId_TKNq6",
+      "message": "Viewership aggregation reports generation failed",
+      "type": "SnsAlarm",
+      "topicArn": "arn:aws:sns:us-west-2:539114338268:viewership-reports-completed"
+    },
+    {
+      "imageId": "ami-20b97540",
+      "instanceType": "r3.2xlarge",
+      "name": "EC2ResourceObj",
+      "id": "EC2ResourceObj",
+      "type": "Ec2Resource",
+      "myComment": "Ec-2 instance to run on",
+      "terminateAfter": "18 Hour"
+    },
+    {
+      "role": "DataPipelineDefaultRole",
+      "subject": "Aggregated reports success",
+      "name": "SuccessNotify",
+      "id": "ActionId_vMO4H",
+      "message": "Viewership aggregation reports generated",
+      "type": "SnsAlarm",
+      "topicArn": "arn:aws:sns:us-west-2:539114338268:viewership-reports-completed"
+    },
+    {
+      "directoryPath": "#{myS3InputLoc}",
+      "name": "S3InputLocation",
+      "id": "S3InputLocation",
+      "type": "S3DataNode",
+      "myComment": "Input Stage S3 Location - binaries and scripts"
+    },
+    {
+      "directoryPath": "#{myS3OutputLoc}/#{format(@scheduledStartTime, 'YYYY-MM-dd-HH-mm-ss')}",
+      "name": "S3OutputLocation",
+      "id": "S3OutputLocation",
+      "type": "S3DataNode",
+      "myComment": "Output S3 Location for Logs"
+    },
+    {
       "failureAndRerunMode": "CASCADE",
       "schedule": {
         "ref": "DefaultSchedule"
@@ -11,31 +59,10 @@
       "pipelineLogUri": "s3://daap-pipeline/",
       "scheduleType": "cron",
       "name": "Default",
-      "id": "Default"
+      "id": "Default",
+      "myComment": "Pipeline root object"
     },
     {
-      "myComment": "This object is used to specify the time-based trigger for executing Activities and for provisioning Resources of the pipeline. In this case it is used by the 'Default' object so it will cascade down to all other objects in the pipeline if they do not override it. For this example, we are using it to specify that our pipeline will run immediately upon activation. Also, we are using the 'occurrences' option specify that the pipeline should only be run once. You can have multiple schedules defined in a pipeline.",
-      "type": "Schedule",
-      "id": "DefaultSchedule",
-      "period": "1 Day",
-      "startAt": "FIRST_ACTIVATION_DATE_TIME"
-    },
-    {
-      "myComment": "Input Stage S3 Location - binaries and scripts",
-      "directoryPath": "#{myS3InputLoc}",
-      "name": "S3InputLocation",
-      "id": "S3InputLocation",
-      "type": "S3DataNode"
-    },
-    {
-      "myComment": "Output S3 Location for Logs",
-      "directoryPath": "#{myS3OutputLoc}/#{format(@scheduledStartTime, 'YYYY-MM-dd-HH-mm-ss')}",
-      "name": "S3OutputLocation",
-      "id": "S3OutputLocation",
-      "type": "S3DataNode"
-    },
-    {
-      "myComment": "Shell Command Activity Obj",
       "output": {
         "ref": "S3OutputLocation"
       },
@@ -43,33 +70,31 @@
         "ref": "S3InputLocation"
       },
       "stage": "true",
+      "onFail": {
+        "ref": "ActionId_TKNq6"
+      },
       "name": "ShellCommandActivityObj",
       "id": "ShellCommandActivityObj",
       "runsOn": {
         "ref": "EC2ResourceObj"
       },
+      "myComment": "Shell Command Activity Obj",
       "type": "ShellCommandActivity",
-      "command": "#{myShellCmd}"
-    },
-    {
-      "myComment": "Ec-2 instance to run on",
-      "instanceType": "r3.2xlarge",
-      "imageId": "ami-20b97540",
-      "name": "EC2ResourceObj",
-      "id": "EC2ResourceObj",
-      "type": "Ec2Resource",
-      "terminateAfter": "18 Hour"
+      "command": "#{myShellCmd}",
+      "onSuccess": {
+        "ref": "ActionId_vMO4H"
+      }
     }
   ],
   "parameters": [
     {
-      "description": "S3 output folder",
-      "id": "myS3OutputLoc",
+      "description": "S3 input folder",
+      "id": "myS3InputLoc",
       "type": "AWS::S3::ObjectKey"
     },
     {
-      "description": "S3 input folder",
-      "id": "myS3InputLoc",
+      "description": "S3 output folder",
+      "id": "myS3OutputLoc",
       "type": "AWS::S3::ObjectKey"
     },
     {
