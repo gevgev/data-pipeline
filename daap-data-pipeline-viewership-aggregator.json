@@ -13,7 +13,7 @@
       "subject": "FAILURE: Aggregated",
       "name": "FailureNotify",
       "id": "ActionId_TKNq6",
-      "message": "Viewership aggregation reports generation failed",
+      "message": "Aggregated viewership/household reports generation failed",
       "type": "SnsAlarm",
       "topicArn": "arn:aws:sns:us-west-2:539114338268:viewership-reports-completed"
     },
@@ -28,10 +28,10 @@
     },
     {
       "role": "DataPipelineDefaultRole",
-      "subject": "Aggregated reports success",
+      "subject": "SUCCESS: Aggregated viewership/household reports generated",
       "name": "SuccessNotify",
       "id": "ActionId_vMO4H",
-      "message": "Viewership aggregation reports generated",
+      "message": "Aggregated viewership/household reports generated",
       "type": "SnsAlarm",
       "topicArn": "arn:aws:sns:us-west-2:539114338268:viewership-reports-completed"
     },
@@ -88,6 +88,11 @@
   ],
   "parameters": [
     {
+      "description": "Days after for aggregation",
+      "id": "daysAggregate",
+      "type": "String"
+    },
+    {
       "description": "S3 input folder",
       "id": "myS3InputLoc",
       "type": "AWS::S3::ObjectKey"
@@ -104,7 +109,8 @@
     }
   ],
   "values": {
-    "myShellCmd": "cp ${INPUT1_STAGING_DIR}/* .\nchmod u+x ./loop.sh\nchmod u+x ./run.sh\nchmod u+x ./viewership-aggregator\nchmod u+x ./precondition\n./loop.sh",
+    "daysAggregate" : "2",
+    "myShellCmd": "cp ${INPUT1_STAGING_DIR}/* .\nchmod u+x ./loop.sh\nchmod u+x ./run.sh\nchmod u+x ./viewership-aggregator\nchmod u+x ./precondition\n./loop.sh #{daysAggregate}",
     "myS3InputLoc": "s3://daap-pipeline/viewership-aggregator/",
     "myS3OutputLoc": "s3://daap-pipeline/"
   }
