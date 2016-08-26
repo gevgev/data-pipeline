@@ -89,7 +89,7 @@
   "parameters": [
     {
       "description": "Days after for aggregation",
-      "id": "daysAggregate",
+      "id": "myDaysAggregate",
       "type": "String"
     },
     {
@@ -109,8 +109,8 @@
     }
   ],
   "values": {
-    "daysAggregate" : "2",
-    "myShellCmd": "cp ${INPUT1_STAGING_DIR}/* .\nchmod u+x ./loop.sh\nchmod u+x ./run.sh\nchmod u+x ./viewership-aggregator\nchmod u+x ./precondition\n./loop.sh #{daysAggregate}",
+    "myDaysAggregate" : "2",
+    "myShellCmd": "cp ${INPUT1_STAGING_DIR}/* .\nchmod u+x ./loop.sh\nchmod u+x ./run.sh\nchmod u+x ./viewership-aggregator\nchmod u+x ./precondition\n./loop.sh #{myDaysAggregate}",
     "myS3InputLoc": "s3://daap-pipeline/viewership-aggregator/",
     "myS3OutputLoc": "s3://daap-pipeline/"
   }
