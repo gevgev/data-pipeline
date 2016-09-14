@@ -110,7 +110,7 @@
   ],
   "values": {
     "myDaysAggregate" : "2",
-    "myShellCmd": "cp ${INPUT1_STAGING_DIR}/* .\nchmod u+x ./loop.sh\nchmod u+x ./run.sh\nchmod u+x ./viewership-aggregator\nchmod u+x ./precondition\n./loop.sh #{myDaysAggregate}",
+    "myShellCmd": "sudo yum install -y perl-Switch perl-DateTime perl-Sys-Syslog perl-LWP-Protocol-https\ncurl http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.1.zip -O\nunzip CloudWatchMonitoringScripts-1.2.1.zip\nrm CloudWatchMonitoringScripts-1.2.1.zip\ncp ${INPUT1_STAGING_DIR}/* .\nchmod u+x ./loop.sh\nchmod u+x ./run.sh\nchmod u+x ./viewership-aggregator\nchmod u+x ./precondition\n./loop.sh #{myDaysAggregate}\ncd aws-scripts-mon \n./mon-put-instance-data.pl --mem-util --mem-used --mem-avail",
     "myS3InputLoc": "s3://daap-pipeline/viewership-aggregator/",
     "myS3OutputLoc": "s3://daap-pipeline/"
   }

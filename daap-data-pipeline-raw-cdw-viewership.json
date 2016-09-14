@@ -112,7 +112,7 @@
     }
   ],
   "values": {
-    "myShellCmd": "cp ${INPUT1_STAGING_DIR}/* .\nchmod u+x ./loop.sh\nchmod u+x ./run.sh\nchmod u+x ./aws-s3-uploader\nchmod u+x ./cdwdatagetter\nchmod u+x ./precondition\n./loop.sh #{myCdwAwsKey} #{myCdwAwsSecret}",
+    "myShellCmd": "sudo yum install -y perl-Switch perl-DateTime perl-Sys-Syslog perl-LWP-Protocol-https\n curl http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.1.zip -O\n unzip CloudWatchMonitoringScripts-1.2.1.zip \n rm CloudWatchMonitoringScripts-1.2.1.zip \n  cp ${INPUT1_STAGING_DIR}/* .\nchmod u+x ./loop.sh\nchmod u+x ./run.sh\nchmod u+x ./aws-s3-uploader\nchmod u+x ./cdwdatagetter\nchmod u+x ./precondition\n./loop.sh #{myCdwAwsKey} #{myCdwAwsSecret}\n cd aws-scripts-mon \n ./mon-put-instance-data.pl --mem-util --mem-used --mem-avail \n",
     "myS3InputLoc": "s3://daap-pipeline/cdw-raw-data/",
     "myS3OutputLoc": "s3://daap-pipeline/"
   }
