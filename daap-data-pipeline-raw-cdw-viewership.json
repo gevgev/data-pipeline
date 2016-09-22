@@ -59,7 +59,7 @@
     },
     {
       "myComment": "Ec-2 instance to run on",
-      "instanceType": "c4.xlarge",
+      "instanceType": "c4.large",
       "imageId": "ami-35925e55",
       "name": "EC2ResourceObj",
       "id": "EC2ResourceObj",
