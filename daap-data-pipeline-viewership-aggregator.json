@@ -19,7 +19,7 @@
     },
     {
       "imageId": "ami-20b97540",
-      "instanceType": "m4.large",
+      "instanceType": "m4.xlarge",
       "name": "EC2ResourceObj",
       "id": "EC2ResourceObj",
       "type": "Ec2Resource",
